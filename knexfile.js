@@ -1,17 +1,20 @@
 require('dotenv').config();
 const pg = require('pg');
 
-// pg.defaults.ssl = true;
+pg.defaults.ssl = {
+	rejectUnauthorized: false,
+ }
 
 module.exports = {
 	development: {
 		client: 'pg',
-		connection: {
-			host: 'localhost',
-			port: 5432,
-			user: 'postgres',
-			database: 'challengerDB',
-			password: process.env.LOCAL_PASSWORD
+        connection: process.env.DATABASE_URL,
+        ssl: {
+              rejectUnauthorized: false
+        },
+		pool: {
+			min: 2,
+			max: 10
 		},
 		migrations: {
 			directory: './data/migrations'
@@ -25,15 +28,19 @@ module.exports = {
 	},
 	production: {
 		client: 'pg',
-		connection: process.env.DATABASE_URL,
+        connection: process.env.PROD_DATABASE_URL,
+        ssl: {
+              rejectUnauthorized: false
+        },
 		pool: {
 			min: 2,
 			max: 10
 		},
 		migrations: {
-			tablename: 'challenge_migrations',
 			directory: './data/migrations'
 		},
-		seeds: { directory: './data/seeds' }
-	}
+		useNullAsDefault: true
+	},
+	
 };
+

@@ -8,22 +8,22 @@ exports.up = function(knex) {
         table.text('streetAddress2')
         table.text('city').notNullable()
         table.text('state').notNullable()
-        table.intager('zip').notNullable()
+        table.integer('zip').notNullable()
         table.text('phone')
-        table.intager('lat')
-        table.intager('lon')
+        table.integer('lat')
+        table.integer('lon')
         table.boolean('washed').notNullable().defaultTo(false)
 
     }).createTable('menuGroups', (table) => {
         table.increments('id');
-        table.intager('restaurant_ref').references('id').inTable('restaurants'); 
+        table.integer('restaurant_ref').references('id').inTable('restaurants'); 
         table.text('groupTitle').notNullable();
 
     }).createTable('dishes', (table) => {
         table.increments('id');
-        table.intager('menuGroup_ref').references('id').inTable('menuGroups'); 
+        table.integer('menuGroup_ref').references('id').inTable('menuGroups'); 
         table.text('dishTitle').notNullable();
-        table.intager('price')
+        table.integer('price')
         table.text('description')
 
     })
