@@ -10,6 +10,11 @@ async function add(data, table) {
 	});
 }
 
+function findAll(table, where, value) {
+		return db(table).where(where, value);
+	
+}
+
 function findByAny(ref1, ref2, table) {
 	return db(table).where(ref1, ref2);
 }
@@ -17,5 +22,6 @@ function findByAny(ref1, ref2, table) {
 module.exports = {
     findById,
     add,
+	findAll,
 	findByAny
 };
