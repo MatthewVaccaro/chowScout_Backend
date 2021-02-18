@@ -18,12 +18,22 @@
   },
   "homepage": "https://github.com/MatthewVaccaro/chowScout_Backend#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.21.17",
     "nodemon": "^2.0.7",
     "pg": "^8.5.1",
+    "puppeteer": "^7.0.1",
     "sqlite3": "^5.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.2.1"
   }
 }

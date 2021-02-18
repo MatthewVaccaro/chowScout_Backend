@@ -8,6 +8,7 @@ pg.defaults.ssl = {
 module.exports = {
 	development: {
 		client: 'pg',
+        // eslint-disable-next-line no-undef
         connection: process.env.DATABASE_URL,
         ssl: {
               rejectUnauthorized: false
@@ -28,6 +29,7 @@ module.exports = {
 	},
 	production: {
 		client: 'pg',
+        // eslint-disable-next-line no-undef
         connection: process.env.PROD_DATABASE_URL,
         ssl: {
               rejectUnauthorized: false
