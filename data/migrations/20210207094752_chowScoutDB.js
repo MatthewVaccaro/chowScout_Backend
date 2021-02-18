@@ -6,25 +6,41 @@ exports.up = function(knex) {
         table.text('cuisine').notNullable()
         table.text('streetAddress1').notNullable()
         table.text('streetAddress2')
-        table.text('city').notNullable()
-        table.text('state').notNullable()
-        table.integer('zip').notNullable()
+        table.text('city')
+        table.text('state')
+        table.integer('zip')
         table.text('phone')
-        table.integer('lat')
-        table.integer('lon')
+        table.float('lat')
+        table.float('lon')
         table.boolean('washed').notNullable().defaultTo(false)
+
+    }).createTable('dishTags', (table)=>{
+        table.increments('id');
+        table.text('tag').unique().notNullable();
+        
+    }).createTable('hours', (table) => {
+        table.increments('id');
+        table.integer('restaurant_ref').references('id').inTable('restaurants').onUpdate('CASCADE').onDelete('CASCADE')
+        table.text('mon')
+        table.text('tue')
+        table.text('wed')
+        table.text('thu')
+        table.text('fri')
+        table.text('sat')
+        table.text('sun')
 
     }).createTable('menuGroups', (table) => {
         table.increments('id');
-        table.integer('restaurant_ref').references('id').inTable('restaurants'); 
+        table.integer('restaurant_ref').references('id').inTable('restaurants').onUpdate('CASCADE').onDelete('CASCADE')
         table.text('groupTitle').notNullable();
 
     }).createTable('dishes', (table) => {
         table.increments('id');
-        table.integer('menuGroup_ref').references('id').inTable('menuGroups'); 
+        table.integer('menuGroup_ref').references('id').inTable('menuGroups').onUpdate('CASCADE').onDelete('CASCADE') 
         table.text('dishTitle').notNullable();
-        table.integer('price')
+        table.float('price')
         table.text('description')
+        table.integer('tag_ref').references('id').inTable('dishTags').onUpdate('CASCADE').onDelete('CASCADE') 
 
     })
 };
@@ -32,7 +48,15 @@ exports.up = function(knex) {
 exports.down = function(knex) {
     return knex.schema
 		.dropTableIfExists('dishes')
+        .dropTableIfExists('hours')
+        .dropTableIfExists('dishTags')
 		.dropTableIfExists('menuGroups')
 		.dropTableIfExists('restaurants')
   
 };
+
+// .createTable('dishTags', (table)=>{
+//     table.increments('id');
+//     table.text('tagTitle').notNullable();
+    
+// })
