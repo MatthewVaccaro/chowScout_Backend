@@ -18,7 +18,17 @@ function PUT_singleDirty() {
                 await basicActions.update( sectionValue.sectionId, {groupTitle : sectionValue.groupTitle}, 'menuGroups' )
                 sectionValue.dishes.map( async dishValue => { 
 
-                    const {dishTitle, price, description, tag_ref} = dishValue
+                    var {dishTitle, price, description, tag_ref} = dishValue
+
+                    if (tag_ref != null){
+                        const findTag = await basicActions.findByAny('tag', tag_ref, 'dishTags')
+                        if ( findTag.length > 0 ){
+                             tag_ref = findTag[0].id
+                        }else{
+                            const createTag = await basicActions.add({tag: tag_ref},  'dishTags')
+                            tag_ref = createTag[0].id
+                        }
+                    }
                     await basicActions.update(dishValue.id, {dishTitle: dishTitle, price: price, description: description, tag_ref: tag_ref  }, 'dishes')
                 }  )
             })

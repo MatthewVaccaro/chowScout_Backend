@@ -1,9 +1,9 @@
 const basicActions = require('../models/basicModel')
 
-function GET_allDirty() {
+function GET_all() {
 	return async (req, res, next) => {
         try {
-            const findAllDirty = await basicActions.findAll('restaurants', 'washed', false)
+            const findAllDirty = await basicActions.findAll('restaurants', 'washed', req.params.washStatus)
             return res.status(200).json(findAllDirty)
         } catch (error) {
             next(error)
@@ -11,4 +11,4 @@ function GET_allDirty() {
     }
 }
 
-module.exports = GET_allDirty;
+module.exports = GET_all;
