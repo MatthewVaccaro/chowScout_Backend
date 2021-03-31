@@ -35,12 +35,15 @@ async function gsRun( client ){
 
     const getRequest = await gsAPI.spreadsheets.values.get(getOptions)
     console.log(getRequest.data.values)
+    
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
 
     const upateOptions = {
         spreadsheetId: '1o9j2g1Ab7zvhTAQL6YJz4PSqmU2FV-NEAE7t33hUD2Q',
         range: `A${getRequest.data.values.length + 1}`,
         valueInputOption: 'USER_ENTERED',
-        resource: {values: [[req.body.email, req.body.city]] }
+        resource: {values: [[req.body.email, req.body.city, today.toDateString()]] }
     } 
 
     const updateRequest = await gsAPI.spreadsheets.values.update(upateOptions)
