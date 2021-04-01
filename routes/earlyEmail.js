@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const {google} = require('googleapis')
-const keys = require('../chowscout-d890c92abf18.json')
 require('dotenv').config();
 
 router.post('/signup', async (req, res)=>{
