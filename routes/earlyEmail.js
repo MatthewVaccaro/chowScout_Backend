@@ -1,26 +1,28 @@
 const router = require('express').Router();
 const {google} = require('googleapis')
-const keys = require('../keys.json')
+const keys = require('../chowscout-d890c92abf18.json')
+require('dotenv').config();
 
-router.post('/signup', async (req, res, next)=>{
+router.post('/signup', async (req, res)=>{
 
     if (!req.body.email || !req.body.email){
         return res.status(400).json({message: "Needs email & or city"})
     }
 
+    const spreadsheetId = '1o9j2g1Ab7zvhTAQL6YJz4PSqmU2FV-NEAE7t33hUD2Q'
+
 const client = new google.auth.JWT(
-    keys.client_email,
+    process.env.CLIENT_EMAIL,
     null,
-    keys.private_key,
+    process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
     [ 'https://www.googleapis.com/auth/spreadsheets' ]
 );
 
-client.authorize(function (err, tokens){
+client.authorize(function (err){
     if(err){
         console.log(err)
         return
     }else{
-        console.log('connected')
         gsRun(client)
     }
 })
@@ -29,7 +31,7 @@ async function gsRun( client ){
     const gsAPI = await google.sheets({version: 'v4', auth: client})
 
     const getOptions = {
-        spreadsheetId: '1o9j2g1Ab7zvhTAQL6YJz4PSqmU2FV-NEAE7t33hUD2Q',
+        spreadsheetId: spreadsheetId,
         range: 'B:B'
     } 
 
@@ -40,7 +42,7 @@ async function gsRun( client ){
     const today = new Date(timeElapsed);
 
     const upateOptions = {
-        spreadsheetId: '1o9j2g1Ab7zvhTAQL6YJz4PSqmU2FV-NEAE7t33hUD2Q',
+        spreadsheetId: spreadsheetId,
         range: `A${getRequest.data.values.length + 1}`,
         valueInputOption: 'USER_ENTERED',
         resource: {values: [[req.body.email, req.body.city, today.toDateString()]] }
