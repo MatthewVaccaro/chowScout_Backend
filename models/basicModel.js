@@ -10,7 +10,6 @@ function findById(id, table) {
 
 async function add(data, table) {
 	return db.insert(data).into(table).returning('id').then((res) => {
-		console.log(res)
 		return findById(res[0], table);
 	});
 }
