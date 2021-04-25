@@ -9,6 +9,8 @@ function POST_scrape() {
 
             const {restaurant, menu, hours} = req.body
 
+            console.log(restaurant, menu, hours)
+
             // SECTION Get Location
             const geolocationURL = (street, city, state)=> {
                 return `https://www.mapquestapi.com/geocoding/v1/address?key=${process.env.MAP_QUEST_KEY}&inFormat=json&outFormat=json&json={"location":{"street":"${street}, ${city}, ${state}"},"options":{"thumbMaps":false}}`
@@ -30,7 +32,7 @@ function POST_scrape() {
             }
 
             // SECTION create location object
-            const foundLocation = await axios.get(geolocationURL(restaurant.streetAddress1, restaurant.city, restaurant.state))
+            const foundLocation = await axios.get(geolocationURL(restaurant.streetAddress1, restaurant.city, restaurant.state_ref))
             const {displayLatLng, postalCode} = foundLocation.data.results[0].locations[0]
             restaurant.zip = parseInt(postalCode.split('-')[0])
             restaurant.lat = displayLatLng.lat
@@ -51,8 +53,8 @@ function POST_scrape() {
                 const addSection = await basicActions.add({groupTitle:section.groupTitle, restaurant_ref:restaurantID}, 'menuGroups')
                 
                 section.dishs.map(item => { 
-                    
                     item.menuGroup_ref = addSection[0].id
+                    item.restaurant_ref = restaurantID
                     basicActions.add(item, 'dishes')
                  })
             }));
