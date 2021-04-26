@@ -9,7 +9,7 @@ function POST_newState() {
                 return res.status(400).json({message: "Missing data"})
             }
 
-            if (req.body.abbreviation.length > 2){
+            if (req.body.abbreviation.length !== 2){
                 return res.status(400).json({message: "Incorrect abbreviation"})
             }
 
@@ -20,7 +20,7 @@ function POST_newState() {
                 stateName: req.body.stateName.toLowerCase(),
                 abbreviation: req.body.abbreviation.toLowerCase()
             }
-            
+
             const newState = await basicActions.add(data, "states")
 
             res.status(201).json(newState)
