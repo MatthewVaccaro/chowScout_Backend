@@ -3,7 +3,7 @@ exports.up = function(knex) {
     return knex.schema
     .createTable('states', (table)=>{
         table.increments('id')
-        table.text('stateName').notNullable()
+        table.text('stateName')
     })
   
 };
