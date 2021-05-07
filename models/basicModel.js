@@ -43,6 +43,10 @@ function update(id, changes, table) {
 		});
 }
 
+function searchQuery(searchString, id) {
+	return db("dishes").where("dishTitle", "like", `%${searchString}%`).where("restaurant_ref", id);
+}
+
 module.exports = {
 	fullTable,
 	findById,
@@ -52,4 +56,5 @@ module.exports = {
 	remove,
 	removeByRef,
 	update,
+	searchQuery,
 };
