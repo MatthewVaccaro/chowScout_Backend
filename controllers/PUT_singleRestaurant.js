@@ -10,7 +10,7 @@ function PUT_singleRestaurant() {
 			helpers.checkLength(findBusiness, "Couldn't find that place", res);
 			await basicActions.update(findBusiness[0].id, business, "restaurants");
 
-			const findHours = await basicActions.findByAny("restaurant_ref", findBusiness[0].id, "hours");
+			const findHours = await basicActions.findWithFilter("restaurant_ref", findBusiness[0].id, "hours");
 			helpers.checkLength(findHours, "Couldn't find those hours", res);
 			await basicActions.update(findHours[0].id, hours, "hours");
 
@@ -20,7 +20,7 @@ function PUT_singleRestaurant() {
 					var { dishTitle, price, description, tag_ref } = dishValue;
 
 					if (tag_ref != null) {
-						const findTag = await basicActions.findByAny("tag", tag_ref, "dishTags");
+						const findTag = await basicActions.findWithFilter("tag", tag_ref, "dishTags");
 						if (findTag.length > 0) {
 							tag_ref = findTag[0].id;
 						} else {

@@ -23,7 +23,7 @@ function POST_restaurant() {
 			helpers.checkLength(restaurant.state_ref, "needs a state", res);
 
 			// SECTION Validate the restaurant isn't a dupliacte
-			const checkUnique = await basicActions.findByAny("businessName", restaurant.businessName, "restaurants");
+			const checkUnique = await basicActions.findWithFilter("businessName", restaurant.businessName, "restaurants");
 			if (checkUnique.length > 0) {
 				if (checkUnique[0].streetAddress1 === restaurant.streetAddress1) {
 					return res.status(400).json({ message: "It's already on the menu errer Code: 1001" });
@@ -37,7 +37,7 @@ function POST_restaurant() {
 			restaurant.lat = displayLatLng.lat;
 			restaurant.lon = displayLatLng.lng;
 
-			const findStateRef = await basicActions.findByAny("stateName", restaurant.state_ref, "states");
+			const findStateRef = await basicActions.findWithFilter("stateName", restaurant.state_ref, "states");
 			helpers.checkLength(findStateRef, "no state found", res);
 			restaurant.state_ref = findStateRef[0].id;
 
