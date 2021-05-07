@@ -10,11 +10,11 @@ function GET_singleRestaurant() {
 
 			const menu = [];
 
-			const hours = await basicActions.findByAny("restaurant_ref", businessID, "hours");
+			const hours = await basicActions.findWithFilter("restaurant_ref", businessID, "hours");
 
-			const sections = await basicActions.findByAny("restaurant_ref", businessID, "menuGroups");
+			const sections = await basicActions.findWithFilter("restaurant_ref", businessID, "menuGroups");
 			for (let index = 0; index < sections.length; index++) {
-				const items = await basicActions.findByAny("menuGroup_ref", sections[index].id, "dishes");
+				const items = await basicActions.findWithFilter("menuGroup_ref", sections[index].id, "dishes");
 				menu.push({ sectionId: sections[index].id, groupTitle: sections[index].groupTitle, dishes: items });
 			}
 

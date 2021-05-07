@@ -14,7 +14,7 @@ function POST_addTag() {
 
 			const { tag } = req.body;
 
-			const checkUnique = await basicActions.findByAny("tag", tag, "dishTags");
+			const checkUnique = await basicActions.findWithFilter("tag", tag, "dishTags");
 			helpers.checkUnique(checkUnique, "already exists", res);
 
 			const createTag = await basicActions.add({ tag: tag }, "dishTags");
