@@ -1,28 +1,30 @@
-const router = require('express').Router();
-const POST_scrape = require('../controllers/POST_scrape')
-const GET_all = require('../controllers/GET_all');
-const GET_singleDirty = require('../controllers/GET_singleDirty');
-const GET_allTags = require('../controllers/GET_allTags');
-const POST_createTag = require('../controllers/POST_createTag');
-const DEL_singleDirty = require('../controllers/DEL_singleDirty')
-const PUT_singleDirty = require('../controllers/PUT_singleDirty');
-const PUT_cleanToggle = require('../controllers/PUT_cleanToggle');
-require('dotenv').config();
+const router = require("express").Router();
+const POST_restaurant = require("../controllers/POST_restaurant");
+const GET_allRestaurants = require("../controllers/GET_allRestaurants");
+const GET_singleRestaurant = require("../controllers/GET_singleRestaurant");
+const GET_allTags = require("../controllers/GET_allTags");
+const POST_addTag = require("../controllers/POST_addTag");
+const DEL_singleRestaurant = require("../controllers/DEL_singleRestaurant");
+const PUT_singleRestaurant = require("../controllers/PUT_singleRestaurant");
+const PUT_washStatus = require("../controllers/PUT_washStatus");
+require("dotenv").config();
 
-router.post('/addScrape', POST_scrape());
+// ANCHOR: Base Route: /api/internal/washer
 
-router.get('/all/:washStatus', GET_all());
+router.post("/addRestaurant", POST_restaurant());
 
-router.get('/singleEntry/:id', GET_singleDirty())
+router.get("/allRestaurants/:washStatus", GET_allRestaurants());
 
-router.post('/createTag', POST_createTag())
+router.get("/singleRestaurant/:id", GET_singleRestaurant()); // NOTE: Update to be GET_singleRestaurant
 
-router.get('/allTags', GET_allTags())
+router.delete("/singleRestaurant/:id", DEL_singleRestaurant());
 
-router.delete('/singleDirty/:id', DEL_singleDirty())
+router.put("/singleRestaurant/:id", PUT_singleRestaurant());
 
-router.put('/singleDirty/:id', PUT_singleDirty())
+router.put("/washStatus/:id", PUT_washStatus());
 
-router.put('/cleanToggle/:id', PUT_cleanToggle())
+router.post("/addTag", POST_addTag());
+
+router.get("/allTags", GET_allTags());
 
 module.exports = router;
