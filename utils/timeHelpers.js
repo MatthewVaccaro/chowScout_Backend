@@ -44,8 +44,6 @@ function isOpen(hoursObject) {
 			? parseInt(restaurantCloseHours[0] + restaurantCloseHours[1])
 			: parseInt(restaurantCloseHours[0] + restaurantCloseHours[1]) + 1200;
 
-	console.log(`${today}, ${hour}, ${openHour}, ${closedHour} `);
-
 	//NOTE: Normal check: Current > open && Current < closed
 	if (hour > openHour && hour < closedHour) {
 		return true;
@@ -62,3 +60,16 @@ function isOpen(hoursObject) {
 module.exports = {
 	isOpen,
 };
+
+// var fakeObject = {
+// 	// Normal
+// 	mon: "5:00 AM 11:00 AM",
+// 	tue: "5:00 AM 11:00 AM",
+// 	wed: "11:00 AM 10:00 PM",
+// 	thu: "11:00 AM 8:00 PM",
+// 	fri: "11:00 AM 8:00 PM",
+// 	sat: "11:00 AM 3:00 PM",
+// 	sun: "Closed",
+// };
+
+// console.log(timeHelper.isOpen(fakeObject));
