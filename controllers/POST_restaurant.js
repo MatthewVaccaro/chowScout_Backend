@@ -33,9 +33,11 @@ function POST_restaurant() {
 			// SECTION create location object
 			const foundLocation = await axios.get(geolocationURL(restaurant.streetAddress1, restaurant.city, restaurant.state_ref));
 			const { displayLatLng, postalCode } = foundLocation.data.results[0].locations[0];
+			console.log("===========", postalCode, "===========");
 			restaurant.zip = parseInt(postalCode.split("-")[0]);
 			restaurant.lat = displayLatLng.lat;
 			restaurant.lon = displayLatLng.lng;
+			console.log("===========", restaurant);
 
 			const findStateRef = await basicActions.findWithFilter("stateName", restaurant.state_ref, "states");
 			helpers.checkLength(findStateRef, "no state found", res);
@@ -64,7 +66,6 @@ function POST_restaurant() {
 				hours: addHours,
 				menu: addMenu,
 			};
-
 			return res.status(201).json(result);
 		} catch (error) {
 			next(error);

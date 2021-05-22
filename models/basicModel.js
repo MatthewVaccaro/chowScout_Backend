@@ -18,8 +18,8 @@ async function add(data, table) {
 		});
 }
 
-function findWithFilter(row, value, table) {
-	return db(table).where(row, value);
+function findWithFilter(col, value, table) {
+	return db(table).where(col, value);
 }
 
 function findWithMultiFilter(filter = {}, table) {
@@ -43,6 +43,10 @@ function update(id, changes, table) {
 		});
 }
 
+function searchQuery(searchString, restaurant_ID) {
+	return db("dishes").where("dishTitle", "like", `%${searchString}%`).where("restaurant_ref", restaurant_ID);
+}
+
 module.exports = {
 	fullTable,
 	findById,
@@ -52,4 +56,5 @@ module.exports = {
 	remove,
 	removeByRef,
 	update,
+	searchQuery,
 };
