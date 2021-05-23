@@ -16,7 +16,7 @@ async function reverseGeoLocate(latitude, longitude) {
 	return results.data.results[0].locations[0];
 }
 
-function buildRadii(latitude, longitude, startMile = 0, endMile = 6) {
+function buildRadii(latitude, longitude, startMile = 0, endMile = startMile + 5) {
 	// SECTION Create all of the radius groups needed
 	const searchRadius = 1.609; // NOTE 1km = 1.609 miles
 	const searchableSections = [];
