@@ -1,14 +1,20 @@
 const basicActions = require("../../models/basicModel");
 const helpers = require("../../utils/helpers");
 const timeHelper = require("../../utils/timeHelpers");
-const geolib = require("geolib");
 const locationHelpers = require("../../utils/locationHelpers");
+
+const url = require("url");
 
 function POST_searchQuery() {
 	return async (req, res, next) => {
 		try {
 			const { latitude, longitude } = req.body;
 
+			// SECTION: Query Params to allow the url to control the Radiis to create and search through
+			const startingMile = req.query.startingMile >= 0 ? parseInt(req.query.startingMile) : 0;
+			const endMile = req.query.endMile >= 0 ? parseInt(req.query.endMile) : startingMile + 5;
+
+			console.log(endMile);
 			// SECTION Finding and valdiating the location given
 			const findLocation = await locationHelpers.reverseGeoLocate(latitude, longitude);
 			const foundLocation = await findLocation.adminArea3.toLowerCase();
@@ -18,7 +24,7 @@ function POST_searchQuery() {
 			// SECTION Find all restaurants with the location REF ID
 			const findRestaurants = await basicActions.findWithMultiFilter({ state_ref: validateLocation[0].id, washed: true }, "restaurants");
 
-			const searchableSections = locationHelpers.buildRadii(36.1254902176224, -86.78860731230652, 0, 6);
+			const searchableSections = locationHelpers.buildRadii(latitude, longitude, startingMile, endMile);
 
 			const restaurantsSortedByDistance = {};
 
