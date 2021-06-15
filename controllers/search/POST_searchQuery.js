@@ -13,8 +13,6 @@ function POST_searchQuery() {
 			// SECTION: Query Params to allow the url to control the Radiis to create and search through
 			const startingMile = req.query.startingMile >= 0 ? parseInt(req.query.startingMile) : 0;
 			const endMile = req.query.endMile >= 0 ? parseInt(req.query.endMile) : startingMile + 5;
-
-			console.log(endMile);
 			// SECTION Finding and valdiating the location given
 			const findLocation = await locationHelpers.reverseGeoLocate(latitude, longitude);
 			const foundLocation = await findLocation.adminArea3.toLowerCase();
