@@ -8,11 +8,11 @@ function POST_restaurant() {
 		try {
 			const { restaurant, menu, hours } = req.body;
 
-			console.log(restaurant, menu, hours);
+			console.log(restaurant, hours);
 
 			// SECTION Get Location
 			const geolocationURL = (street, city, state) => {
-				return `https://www.mapquestapi.com/geocoding/v1/address?key=${process.env.MAP_QUEST_KEY}&inFormat=json&outFormat=json&json={"location":{"street":"${street}, ${city}, ${state}"},"options":{"thumbMaps":false}}`;
+				return `https://www.mapquestapi.com/geocoding/v1/address?key=${process.env.MAP_QUEST_KEY}&inFormat=json&outFormat=json&json={"location":{"street":"${street},${city},${state}"},"options":{"thumbMaps":false}}`;
 			};
 
 			// SECTION Validate business info
@@ -30,24 +30,39 @@ function POST_restaurant() {
 				}
 			}
 
+			console.log(
+				"section 1 ------->",
+				restaurant.streetAddress1,
+				restaurant.city,
+				restaurant.state_ref,
+				"\n",
+				geolocationURL(restaurant.streetAddress1, restaurant.city, restaurant.state_ref)
+			);
+
 			// SECTION create location object
 			const foundLocation = await axios.get(geolocationURL(restaurant.streetAddress1, restaurant.city, restaurant.state_ref));
 			const { displayLatLng, postalCode } = foundLocation.data.results[0].locations[0];
-			console.log("===========", postalCode, "===========");
-			restaurant.zip = parseInt(postalCode.split("-")[0]);
+			console.log(displayLatLng);
+			// restaurant.zip = parseInt(postalCode.split("-")[0]);
 			restaurant.lat = displayLatLng.lat;
 			restaurant.lon = displayLatLng.lng;
-			console.log("===========", restaurant);
 
-			const findStateRef = await basicActions.findWithFilter("stateName", restaurant.state_ref, "states");
+			console.log("section 2 ------->");
+
+			const findStateRef = await basicActions.findWithFilter("abbreviation", restaurant.state_ref, "states");
+			console.log("state:", restaurant.state_ref);
 			helpers.checkLength(findStateRef, "no state found", res);
 			restaurant.state_ref = findStateRef[0].id;
+
+			console.log("section 3 ------->");
 
 			const createRestaurant = await basicActions.add(restaurant, "restaurants");
 
 			const restaurantID = createRestaurant[0].id;
 			hours.restaurant_ref = restaurantID;
 			const addHours = await basicActions.add(hours, "hours");
+
+			console.log("section 4 ------->");
 
 			const addMenu = await Promise.all(
 				menu.map(async (section) => {
@@ -60,6 +75,8 @@ function POST_restaurant() {
 					});
 				})
 			);
+
+			console.log("section 5 ------->");
 
 			const result = {
 				restaurant: createRestaurant,
