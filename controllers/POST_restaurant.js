@@ -42,7 +42,6 @@ function POST_restaurant() {
 			// SECTION create location object
 			const foundLocation = await axios.get(geolocationURL(restaurant.streetAddress1, restaurant.city, restaurant.state_ref));
 			const { displayLatLng, postalCode } = foundLocation.data.results[0].locations[0];
-			console.log(displayLatLng);
 			// restaurant.zip = parseInt(postalCode.split("-")[0]);
 			restaurant.lat = displayLatLng.lat;
 			restaurant.lon = displayLatLng.lng;
