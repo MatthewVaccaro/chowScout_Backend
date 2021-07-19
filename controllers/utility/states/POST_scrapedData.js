@@ -1,19 +1,14 @@
 const { google } = require("googleapis");
+require("dotenv").config();
 
 function POST_scrapedData() {
 	return async (req, res, next) => {
 		try {
-			console.log(typeof req.body);
-
-			// if (req.body !== Array) {
-			// 	return res.status(400).json({ message: "Wrong data type" });
-			// }
-
 			if (req.body.length === 0) {
 				return res.status(400).json({ message: "No data found" });
 			}
 
-			const spreadsheetId = "1Fc6xaI6Qcp_8yygk_1KrSUNtCk1kwRnw4E0A1OJViYE";
+			const spreadsheetId = process.env.SPREAD_SHEET_ID;
 
 			const client = new google.auth.JWT(process.env.CLIENT_EMAIL, null, process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"), [
 				"https://www.googleapis.com/auth/spreadsheets",
@@ -37,7 +32,6 @@ function POST_scrapedData() {
 				};
 
 				const getRequest = await gsAPI.spreadsheets.values.get(getOptions);
-				// console.log(getRequest.data.values);
 
 				const upateOptions = {
 					spreadsheetId: spreadsheetId,

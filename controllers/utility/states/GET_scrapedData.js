@@ -1,10 +1,12 @@
 const { google } = require("googleapis");
 const basicActions = require("../../../models/basicModel");
+require("dotenv").config();
 
 function GET_scrapedData() {
 	return async (req, res, next) => {
 		try {
-			const spreadsheetId = "1Fc6xaI6Qcp_8yygk_1KrSUNtCk1kwRnw4E0A1OJViYE";
+			console.log("Trying to get the data yo");
+			const spreadsheetId = process.env.SPREAD_SHEET_ID;
 
 			const client = new google.auth.JWT(process.env.CLIENT_EMAIL, null, process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"), [
 				"https://www.googleapis.com/auth/spreadsheets",
@@ -38,8 +40,6 @@ function GET_scrapedData() {
 				};
 
 				const getRequest = await gsAPI.spreadsheets.values.get(getOptions);
-
-				console.log("inner", getRequest.data.values.length);
 
 				return getRequest.data.values;
 			}
