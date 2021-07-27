@@ -1,5 +1,6 @@
 const axios = require("axios");
 const geolib = require("geolib");
+require("dotenv").config();
 
 async function reverseGeoLocate(latitude, longitude) {
 	const usersCoords = {
@@ -15,6 +16,8 @@ async function reverseGeoLocate(latitude, longitude) {
 
 	return results.data.results[0].locations[0];
 }
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function buildRadii(latitude, longitude, startMile = 0, endMile = startMile + 5) {
 	// SECTION Create all of the radius groups needed
@@ -37,7 +40,24 @@ function buildRadii(latitude, longitude, startMile = 0, endMile = startMile + 5)
 	return searchableSections;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+async function getGeoLocationDetails(street) {
+	try {
+		var baseURL = "https://www.mapquestapi.com/geocoding/v1/address?";
+		var key = process.env.MAP_QUEST_KEY;
+		var address = `Format=json&location=${street}+%2C+${process.env.CURRENT_SCRAPING_STATE}&thumbMaps=false`;
+
+		street = street.split(" ").join("+");
+		const results = await axios.get(`${baseURL}key=${key}&out${address}`);
+		return results.data.results[0].locations[0];
+	} catch (error) {
+		throw new Error(error);
+	}
+}
+
 module.exports = {
 	reverseGeoLocate,
 	buildRadii,
+	getGeoLocationDetails,
 };
