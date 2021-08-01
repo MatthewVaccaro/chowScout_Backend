@@ -27,7 +27,8 @@ function GET_scrapedData() {
 						})
 					);
 					// Returing with a filter and slice to control the ammount and remove nulls/undefines
-					res.status(200).json(confirmedUnique.filter((value) => value !== undefined).slice(0, 10));
+					console.log(process.env.SCRAPE_COUNT);
+					res.status(200).json(confirmedUnique.filter((value) => value !== undefined).slice(0, process.env.SCRAPE_COUNT));
 				}
 			});
 
