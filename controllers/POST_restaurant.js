@@ -2,6 +2,7 @@ const basicActions = require("../models/basicModel");
 const helpers = require("../utils/helpers");
 const locationHelpers = require("../utils/locationHelpers");
 require("dotenv").config();
+const axios = require("axios");
 
 function POST_restaurant() {
 	return async (req, res, next) => {
@@ -11,26 +12,35 @@ function POST_restaurant() {
 			helpers.checkLength(restaurant.businessName, "needs a business name", res);
 			helpers.checkLength(restaurant.cuisine, "needs a cuisine", res);
 			helpers.checkLength(restaurant.streetAddress1, "needs a streetAddress1", res);
-			// helpers.checkLength(menu, "missing Menu", res);
+			helpers.checkLength(menu, "missing Menu", res);
 
 			//Check to see if the restaurant is unique or a duplicate
 			const checkUnique = await basicActions.findWithFilter("businessName", restaurant.businessName, "restaurants");
 			helpers.checkUnique(checkUnique, "It's already on the menu errer Code: 1001", res);
 
 			//Get location details from MapQuest API
-			const getLocation = await locationHelpers.getGeoLocationDetails(restaurant.streetAddress1);
-			//admin Area 5 = City  |  Admin Area 3 = State
-			const { adminArea5, adminArea3, postalCode, latLng, street } = getLocation;
-			const { lat, lng } = latLng;
+			const location = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+				params: {
+					address: restaurant.streetAddress1,
+					key: process.env.GEOCODING_KEY,
+				},
+			});
 
-			//Assign GEO data
+			const { lat, lng } = location.data.results[0].geometry.location;
+			const { formatted_address } = location.data.results[0];
+			const addressSections = formatted_address.split(",");
+			console.log(restaurant.businessName);
+			console.log("\x1b[33m%s\x1b[0m", formatted_address);
+
 			restaurant.businessName = restaurant.businessName.toLowerCase();
-			restaurant.streetAddress1 = street.toLowerCase();
+			restaurant.streetAddress1 = addressSections[0].toLowerCase().trim();
 			restaurant.lat = lat;
 			restaurant.lon = lng;
-			restaurant.city = adminArea5.toLowerCase();
-			restaurant.zip = parseInt(postalCode.split("-")[0]);
-			const findStateRef = await basicActions.findWithFilter("abbreviation", adminArea3.toLowerCase(), "states");
+			restaurant.city = addressSections[1].toLowerCase().trim();
+			restaurant.zip = parseInt(addressSections[2].trim().split(" ")[1]);
+			const state = addressSections[2].trim().split(" ")[0].toLowerCase().trim();
+			console.log("----->", addressSections[2].trim().split(" "));
+			const findStateRef = await basicActions.findWithFilter("abbreviation", state, "states");
 			helpers.checkLength(findStateRef, "no state found", res);
 			restaurant.state_ref = findStateRef[0].id;
 

@@ -43,17 +43,15 @@ function buildRadii(latitude, longitude, startMile = 0, endMile = startMile + 5)
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 async function getGeoLocationDetails(street) {
-	try {
-		var baseURL = "https://www.mapquestapi.com/geocoding/v1/address?";
-		var key = process.env.MAP_QUEST_KEY;
-		var address = `Format=json&location=${street}+%2C+${process.env.CURRENT_SCRAPING_STATE}&thumbMaps=false`;
+	var baseURL = "https://maps.googleapis.com/maps/api/geocode/json";
+	const data = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+		params: {
+			address: "1652 South Val Vista Drive, Mesa, AZ 85204",
+			key: "AIzaSyByTSWjYhDiPSNHvTbIvDjbEH7cgltKftM",
+		},
+	});
 
-		street = street.split(" ").join("+");
-		const results = await axios.get(`${baseURL}key=${key}&out${address}`);
-		return results.data.results[0].locations[0];
-	} catch (error) {
-		throw new Error(error);
-	}
+	return data;
 }
 
 module.exports = {
